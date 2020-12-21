@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Chess Match</title>
+    <link rel="stylesheet" href="./css/chessboard-1.0.0.min.css" />
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="js/chessboard-1.0.0.min.js"></script>
+    <script src="js/chess.js-master/chess.js"></script>
+  </head>
+
+  <body>
+    <div id="myBoard" style="width: 500px"></div>
+    <!-- <input id="depth" type="box"></input> -->
+    <!-- <script>
+      var board = null;
+      var game = new Chess();
+      board = Chessboard("myBoard", "start");
+
+    </script> -->
+    <script src="./play.js"></script>
+    <p>Search depth:</p>
+    <select id="search-depth">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3" selected>3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+  </body>
+</html>
