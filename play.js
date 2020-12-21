@@ -181,7 +181,7 @@ function init_zobrist() {
 
   for (var i = 0; i < 64; i++) {
     for (var j = 0; j < 12; j++) {
-      table[i][j] = Math.floor(Math.random() * (Math.pow(2, 10) - 1));
+      table[i][j] = Math.floor(Math.random() * (Math.pow(2, 25) - 1));
     }
   }
 
@@ -190,9 +190,9 @@ function init_zobrist() {
 
 strABC = "abcdefgh";
 const tableOfvalues = init_zobrist();
-console.log(tableOfvalues);
+//console.log(tableOfvalues);
 var hashValue = 0;
-var hashTable = new Array(Math.pow(2, 10) - 1).fill(null);
+var hashTable = new Array(Math.pow(2, 25) - 1).fill(null);
 
 function hashInitial(board) {
   for (var i = 0; i < 8; i++) {
@@ -232,9 +232,9 @@ function addLookUpHashTable(nextMove, currentSq, turn, gameHash, add, props) {
   var pc = nextMove.charAt(0);
   var sqLetter = nextMove.charAt(1);
   var sqRowNum = nextMove.charAt(2);
-  var nextMoveHash;
+  var nextMoveHash; //Nce2 Nfxd5
 
-  if (sqLetter != " " && sqLetter != "x" && sqLetter != "-") {
+  if (sqLetter != "x" && sqLetter != "-") {
     if (pc == pc.toLowerCase()) {
       pc = turn.concat("p");
       sqLetter = nextMove.charAt(0);
@@ -243,7 +243,10 @@ function addLookUpHashTable(nextMove, currentSq, turn, gameHash, add, props) {
       pc = turn.concat(pc.toLowerCase());
     }
 
-    if (isNaN(sqRowNum)) {
+    if (isNaN(sqRowNum) && nextMove.length > 4) {
+      sqLetter = nextMove.charAt(3);
+      sqRowNum = nextMove.charAt(4);
+    } else if (isNaN(sqRowNum)) {
       sqLetter = nextMove.charAt(2);
       sqRowNum = nextMove.charAt(3);
     }
@@ -328,13 +331,13 @@ function addLookUpHashTable(nextMove, currentSq, turn, gameHash, add, props) {
   }
 
   if (add) {
-    hashTable[nextMoveHash] = { 1: nextMove };
+    hashTable[nextMoveHash] = props;
   } else {
     return nextMoveHash;
   }
 }
 
-function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
+function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
   const newDepth = depth - 1;
 
   if (depth == 0) {
@@ -368,7 +371,14 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
       if (hashTable[nextMoveHash]) {
         evaluation = hashTable[nextMoveHash]["eval"];
       } else {
-        result = miniMax(gameNewMove, newDepth, Alpha, Beta, false);
+        result = miniMax(
+          gameNewMove,
+          newDepth,
+          Alpha,
+          Beta,
+          false,
+          nextMoveHash
+        );
         evaluation = result[1];
         hashTable[nextMoveHash] = { eval: evaluation };
       }
@@ -406,7 +416,14 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
       if (hashTable[nextMoveHash]) {
         evaluation = hashTable[nextMoveHash]["eval"];
       } else {
-        result = miniMax(gameNewMove, newDepth, Alpha, Beta, true);
+        result = miniMax(
+          gameNewMove,
+          newDepth,
+          Alpha,
+          Beta,
+          true,
+          nextMoveHash
+        );
         evaluation = result[1];
         hashTable[nextMoveHash] = { eval: evaluation };
       }
@@ -449,11 +466,19 @@ function play() {
     // game over
     if (possibleMoves.length === 0) return console.log("GG");
 
-    nextMove = miniMax(game, doopth, -Infinity, +Infinity, false);
+    nextMove = miniMax(game, doopth, -Infinity, +Infinity, false, hashValue);
     game.move(nextMove[0]);
+    hashValue = addLookUpHashTable(
+      nextMove[0],
+      getCurrentSq(game, nextMove[0]),
+      "b",
+      hashValue,
+      false,
+      null
+    );
     console.log("nextMove here:  " + nextMove[0], nextMove[1] / 10, game.fen());
-
     board.position(game.fen());
+    //console.log(hashTable);
   }
 
   function onDrop(source, target) {
@@ -464,7 +489,15 @@ function play() {
       to: target,
       promotion: "q", // NOTE: always promote to a queen for example simplicity
     });
-    console.log(game.history());
+    latestMove = game.history()[game.history().length - 1];
+    hashValue = addLookUpHashTable(
+      latestMove,
+      getCurrentSq(game, latestMove),
+      "w",
+      hashValue,
+      false,
+      null
+    );
 
     // illegal move
     if (move === null) return "snapback";
