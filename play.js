@@ -26,8 +26,6 @@ const pcContract = {
   bp: 12,
 };
 
-function get {};
-
 //New Code with square eval
 
 var evaluateBoard = function (board) {
@@ -333,21 +331,13 @@ function hashPC(pc, boardHash, sqLetter, sqRowNum) {
   return newBoardHash;
 }
 
-
-function getCurrentSq (game, nextMove) {
-  if (nextMove[0] == "O-O" || nextMove[0] == "O-O-O" )  return null
-  hist = game.history({verbose:true})
-
-
-
-
+function getCurrentSq(game, nextMove) {
+  if (nextMove[0] == "O-O" || nextMove[0] == "O-O-O") return null;
+  hist = game.history({ verbose: true });
 }
 
-
- // No En Passant
-function AddHashTable(nextMove, currentSq,  turn) {
-  
-
+// No En Passant
+function AddHashTable(nextMove, currentSq, turn) {
   var pc = nextMove[0].charAt(0);
   var sqLetter;
   var sqRowNum;
@@ -366,66 +356,63 @@ function AddHashTable(nextMove, currentSq,  turn) {
     var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
     hashTable[nextMoveHash] = { 1: nextMove[1] };
   } else if (nextMove[0] == "O-O") {
-     if  (turn == "w") {
-      var sqLetter = "g"
-      var sqRowNum = "1"
-      pc = "wk"
+    if (turn == "w") {
+      var sqLetter = "g";
+      var sqRowNum = "1";
+      pc = "wk";
       var takeAwayHash = hashPC(pc, hashValue, "e", "1");
       var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      var sqLetter = "f"
-      var sqRowNum = "1"
-      pc = "wr"
+      var sqLetter = "f";
+      var sqRowNum = "1";
+      pc = "wr";
       var takeAwayHashr = hashPC(pc, nextMoveHash, "h", "1");
       var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
       hashTable[nextMoveHashr] = { 1: nextMove[1] };
-
-     } else {
-      var sqLetter = "g"
-      var sqRowNum = "8"
-      pc = "bk"
+    } else {
+      var sqLetter = "g";
+      var sqRowNum = "8";
+      pc = "bk";
       var takeAwayHash = hashPC(pc, hashValue, "e", "8");
       var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      var sqLetter = "f"
-      var sqRowNum = "8"
-      pc = "br"
+      var sqLetter = "f";
+      var sqRowNum = "8";
+      pc = "br";
       var takeAwayHashr = hashPC(pc, nextMoveHash, "h", "8");
       var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
       hashTable[nextMoveHashr] = { 1: nextMove[1] };
-     }
+    }
   } else {
-    if  (turn == "w") {
-      var sqLetter = "b"
-      var sqRowNum = "1"
-      pc = "wk"
+    if (turn == "w") {
+      var sqLetter = "b";
+      var sqRowNum = "1";
+      pc = "wk";
       var takeAwayHash = hashPC(pc, hashValue, "e", "1");
       var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      var sqLetter = "c"
-      var sqRowNum = "1"
-      pc = "wr"
+      var sqLetter = "c";
+      var sqRowNum = "1";
+      pc = "wr";
       var takeAwayHashr = hashPC(pc, nextMoveHash, "a", "1");
       var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
       hashTable[nextMoveHashr] = { 1: nextMove[1] };
-
-     } else {
-      var sqLetter = "b"
-      var sqRowNum = "8"
-      pc = "bk"
+    } else {
+      var sqLetter = "b";
+      var sqRowNum = "8";
+      pc = "bk";
       var takeAwayHash = hashPC(pc, hashValue, "e", "8");
       var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      var sqLetter = "fc"
-      var sqRowNum = "8"
-      pc = "br"
+      var sqLetter = "fc";
+      var sqRowNum = "8";
+      pc = "br";
       var takeAwayHashr = hashPC(pc, nextMoveHash, "a", "8");
       var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
       hashTable[nextMoveHashr] = { 1: nextMove[1] };
-     }
+    }
   }
 
   console.log(hashTable);
 }
 
 function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
-  
   const newDepth = depth - 1;
 
   if (depth == 0) {
@@ -433,7 +420,7 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
     chosenMove = ["", evaluateBoard(staticGame.board())]; // evaluator(staticGame.fen())];
     return chosenMove;
   }
-  
+
   const possibleMoves = reOrder(gamesource.moves());
   const lengthOfPossible = possibleMoves.length;
 
@@ -512,11 +499,11 @@ function play() {
     // game over
     if (possibleMoves.length === 0) return console.log("GG");
 
-    console.log(hashValue);    
+    console.log(hashValue);
     nextMove = miniMax(game, doopth, -Infinity, +Infinity, false);
     game.move(nextMove[0]);
     console.log("nextMove here:  " + nextMove, game.fen());
-    AddHashTable(nextMove, getCurrentSq (game, nextMove), "b")
+    AddHashTable(nextMove, getCurrentSq(game, nextMove), "b");
 
     board.position(game.fen());
   }
