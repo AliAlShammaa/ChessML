@@ -26,122 +26,7 @@ const pcContract = {
   bp: 12,
 };
 
-function get {};
-
 //New Code with square eval
-
-var evaluateBoard = function (board) {
-  var totalEvaluation = 0;
-  for (var i = 0; i < 8; i++) {
-    for (var j = 0; j < 8; j++) {
-      totalEvaluation = totalEvaluation + getPieceValue(board[i][j], i, j);
-    }
-  }
-  return totalEvaluation;
-};
-
-var getPieceValue = function (piece, x, y) {
-  if (piece === null) {
-    return 0;
-  }
-  var getAbsoluteValue = function (piece, isWhite, x, y) {
-    if (piece.type === "p") {
-      return 10 + (isWhite ? pawnEvalWhite[y][x] : pawnEvalBlack[y][x]);
-    } else if (piece.type === "r") {
-      return 50 + (isWhite ? rookEvalWhite[y][x] : rookEvalBlack[y][x]);
-    } else if (piece.type === "n") {
-      return 30 + knightEval[y][x];
-    } else if (piece.type === "b") {
-      return 30 + (isWhite ? bishopEvalWhite[y][x] : bishopEvalBlack[y][x]);
-    } else if (piece.type === "q") {
-      return 90 + evalQueen[y][x];
-    } else if (piece.type === "k") {
-      return 900 + (isWhite ? kingEvalWhite[y][x] : kingEvalBlack[y][x]);
-    }
-    throw "Unknown piece type: " + piece.type;
-  };
-
-  var absoluteValue = getAbsoluteValue(piece, piece.color === "w", x, y);
-  return piece.color === "w" ? absoluteValue : -absoluteValue;
-};
-
-var reverseArray = function (array) {
-  return array.slice().reverse();
-};
-
-var pawnEvalWhite = [
-  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-  [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
-  [1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 1.0],
-  [0.5, 0.5, 1.0, 2.5, 2.5, 1.0, 0.5, 0.5],
-  [0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0],
-  [0.5, -0.5, -1.0, 0.0, 0.0, -1.0, -0.5, 0.5],
-  [0.5, 1.0, 1.0, -2.0, -2.0, 1.0, 1.0, 0.5],
-  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-];
-
-var pawnEvalBlack = reverseArray(pawnEvalWhite);
-
-var knightEval = [
-  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
-  [-4.0, -2.0, 0.0, 0.0, 0.0, 0.0, -2.0, -4.0],
-  [-3.0, 0.0, 1.0, 1.5, 1.5, 1.0, 0.0, -3.0],
-  [-3.0, 0.5, 1.5, 2.0, 2.0, 1.5, 0.5, -3.0],
-  [-3.0, 0.0, 1.5, 2.0, 2.0, 1.5, 0.0, -3.0],
-  [-3.0, 0.5, 1.0, 1.5, 1.5, 1.0, 0.5, -3.0],
-  [-4.0, -2.0, 0.0, 0.5, 0.5, 0.0, -2.0, -4.0],
-  [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
-];
-
-var bishopEvalWhite = [
-  [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
-  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
-  [-1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0, -1.0],
-  [-1.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, -1.0],
-  [-1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, -1.0],
-  [-1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0],
-  [-1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, -1.0],
-  [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
-];
-
-var bishopEvalBlack = reverseArray(bishopEvalWhite);
-
-var rookEvalWhite = [
-  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-  [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
-  [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0],
-];
-
-var rookEvalBlack = reverseArray(rookEvalWhite);
-
-var evalQueen = [
-  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
-  [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
-  [-1.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
-  [-0.5, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
-  [0.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, -0.5],
-  [-1.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0, -1.0],
-  [-1.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, -1.0],
-  [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
-];
-
-var kingEvalWhite = [
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
-  [-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0],
-  [-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0],
-  [2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0],
-  [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0],
-];
-
-var kingEvalBlack = reverseArray(kingEvalWhite);
 
 function reOrder(possArr) {
   const captures = possArr.filter((move) => {
@@ -322,10 +207,11 @@ function hashInitial(board) {
 }
 
 function hashPC(pc, boardHash, sqLetter, sqRowNum) {
-  const pcNumber = pcContract[pc];
+  var pcNumber = pcContract[pc];
   sqColNum = strABC.lastIndexOf(sqLetter);
   sqNum = 8 * (8 - parseInt(sqRowNum)) + sqColNum;
-  const pcZorbKey = tableOfvalues[sqNum][pcNumber - 1];
+  console.log(sqLetter, sqRowNum, sqNum, pcNumber - 1);
+  var pcZorbKey = tableOfvalues[sqNum][pcNumber - 1];
   var newBoardHash;
 
   newBoardHash = boardHash ^ pcZorbKey;
@@ -333,99 +219,122 @@ function hashPC(pc, boardHash, sqLetter, sqRowNum) {
   return newBoardHash;
 }
 
-
-function getCurrentSq (game, nextMove) {
-  if (nextMove[0] == "O-O" || nextMove[0] == "O-O-O" )  return null
-  hist = game.history({verbose:true})
-
-
-
-
+function getCurrentSq(game, nextMove) {
+  if (nextMove == "O-O" || nextMove == "O-O-O") return null;
+  hist = game.history({ verbose: true });
+  fromSq = hist[hist.length - 1]["from"];
+  console.log(hist, fromSq);
+  return fromSq;
 }
 
+// No En Passant
+function addLookUpHashTable(nextMove, currentSq, turn, gameHash, add, props) {
+  var pc = nextMove.charAt(0);
+  var sqLetter = nextMove.charAt(1);
+  var sqRowNum = nextMove.charAt(2);
+  var nextMoveHash;
 
- // No En Passant
-function AddHashTable(nextMove, currentSq,  turn) {
-  
-
-  var pc = nextMove[0].charAt(0);
-  var sqLetter;
-  var sqRowNum;
   if (sqLetter != " " && sqLetter != "x" && sqLetter != "-") {
-    var sqLetter = nextMove[0].charAt(1);
-    var sqRowNum = nextMove[0].charAt(2);
-    pc = turn.concat(pc.toLowerCase());
-    var takeAwayHash = hashPC(pc, hashValue, "b", "8");
-    var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-    hashTable[nextMoveHash] = { 1: nextMove[1] };
-  } else if (sqLetter == "x") {
-    sqLetter = nextMove[0].charAt(2);
-    sqRowNum = nextMove[0].charAt(3);
-    pc = turn.concat(pc.toLowerCase());
-    var takeAwayHash = hashPC(pc, hashValue, "b", "8");
-    var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-    hashTable[nextMoveHash] = { 1: nextMove[1] };
-  } else if (nextMove[0] == "O-O") {
-     if  (turn == "w") {
-      var sqLetter = "g"
-      var sqRowNum = "1"
-      pc = "wk"
-      var takeAwayHash = hashPC(pc, hashValue, "e", "1");
+    if (pc == pc.toLowerCase()) {
+      pc = turn.concat("p");
+      sqLetter = nextMove.charAt(0);
+      sqRowNum = nextMove.charAt(1);
+    } else {
+      pc = turn.concat(pc.toLowerCase());
+    }
+
+    if (isNaN(sqRowNum)) {
+      sqLetter = nextMove.charAt(2);
+      sqRowNum = nextMove.charAt(3);
+    }
+
+    var takeAwayHash = hashPC(
+      pc,
+      gameHash,
+      currentSq.charAt(0),
+      currentSq.charAt(1)
+    );
+    nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+  } else if (sqLetter == "x" || sqRowNum == "x") {
+    if (pc == pc.toLowerCase()) {
+      pc = turn.concat("p");
+    } else {
+      pc = turn.concat(pc.toLowerCase());
+    }
+
+    if (sqLetter == "x") {
+      sqLetter = nextMove.charAt(2);
+      sqRowNum = nextMove.charAt(3);
+    } else {
+      sqLetter = nextMove.charAt(3);
+      sqRowNum = nextMove.charAt(4);
+    }
+
+    var takeAwayHash = hashPC(
+      pc,
+      gameHash,
+      currentSq.charAt(0),
+      currentSq.charAt(1)
+    );
+    nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+  } else if (nextMove == "O-O") {
+    if (turn == "w") {
+      sqLetter = "g";
+      sqRowNum = "1";
+      pc = "wk";
+      var takeAwayHash = hashPC(pc, gameHash, "e", "1");
       var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      var sqLetter = "f"
-      var sqRowNum = "1"
-      pc = "wr"
+      sqLetter = "f";
+      sqRowNum = "1";
+      pc = "wr";
       var takeAwayHashr = hashPC(pc, nextMoveHash, "h", "1");
-      var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
-      hashTable[nextMoveHashr] = { 1: nextMove[1] };
-
-     } else {
-      var sqLetter = "g"
-      var sqRowNum = "8"
-      pc = "bk"
-      var takeAwayHash = hashPC(pc, hashValue, "e", "8");
+      nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+    } else {
+      sqLetter = "g";
+      sqRowNum = "8";
+      pc = "bk";
+      var takeAwayHash = hashPC(pc, gameHash, "e", "8");
       var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      var sqLetter = "f"
-      var sqRowNum = "8"
-      pc = "br"
+      sqLetter = "f";
+      sqRowNum = "8";
+      pc = "br";
       var takeAwayHashr = hashPC(pc, nextMoveHash, "h", "8");
-      var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
-      hashTable[nextMoveHashr] = { 1: nextMove[1] };
-     }
+      nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+    }
   } else {
-    if  (turn == "w") {
-      var sqLetter = "b"
-      var sqRowNum = "1"
-      pc = "wk"
-      var takeAwayHash = hashPC(pc, hashValue, "e", "1");
+    if (turn == "w") {
+      sqLetter = "b";
+      sqRowNum = "1";
+      pc = "wk";
+      var takeAwayHash = hashPC(pc, gameHash, "e", "1");
       var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      var sqLetter = "c"
-      var sqRowNum = "1"
-      pc = "wr"
+      sqLetter = "c";
+      sqRowNum = "1";
+      pc = "wr";
       var takeAwayHashr = hashPC(pc, nextMoveHash, "a", "1");
-      var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
-      hashTable[nextMoveHashr] = { 1: nextMove[1] };
-
-     } else {
-      var sqLetter = "b"
-      var sqRowNum = "8"
-      pc = "bk"
-      var takeAwayHash = hashPC(pc, hashValue, "e", "8");
+      nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+    } else {
+      sqLetter = "b";
+      sqRowNum = "8";
+      pc = "bk";
+      var takeAwayHash = hashPC(pc, gameHash, "e", "8");
       var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      var sqLetter = "fc"
-      var sqRowNum = "8"
-      pc = "br"
+      sqLetter = "fc";
+      sqRowNum = "8";
+      pc = "br";
       var takeAwayHashr = hashPC(pc, nextMoveHash, "a", "8");
-      var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
-      hashTable[nextMoveHashr] = { 1: nextMove[1] };
-     }
+      nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+    }
   }
 
-  console.log(hashTable);
+  if (add) {
+    hashTable[nextMoveHash] = { 1: nextMove };
+  } else {
+    return nextMoveHash;
+  }
 }
 
 function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
-  
   const newDepth = depth - 1;
 
   if (depth == 0) {
@@ -433,9 +342,11 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
     chosenMove = ["", evaluateBoard(staticGame.board())]; // evaluator(staticGame.fen())];
     return chosenMove;
   }
-  
+
   const possibleMoves = reOrder(gamesource.moves());
   const lengthOfPossible = possibleMoves.length;
+  var evaluation;
+  var result;
 
   if (maximizingPlayer) {
     console.log(possibleMoves);
@@ -445,8 +356,22 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
       console.log("whites turn  " + i);
       var gameNewMove = new Chess(gamesource.fen());
       gameNewMove.move(possibleMoves[i]);
-      var result = miniMax(gameNewMove, newDepth, Alpha, Beta, false);
-      var evaluation = result[1];
+
+      nextMoveHash = addLookUpHashTable(
+        possibleMoves[i],
+        getCurrentSq(gameNewMove, possibleMoves[i]),
+        "w",
+        gameHash,
+        false,
+        null
+      );
+      if (hashTable[nextMoveHash]) {
+        evaluation = hashTable[nextMoveHash]["eval"];
+      } else {
+        result = miniMax(gameNewMove, newDepth, Alpha, Beta, false);
+        evaluation = result[1];
+        hashTable[nextMoveHash] = { eval: evaluation };
+      }
 
       if (evaluation > maxEval) {
         maxEval = evaluation;
@@ -455,7 +380,7 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
 
       Alpha = Math.max(Alpha, evaluation);
       if (Beta <= Alpha) {
-        console.log("we pruned in Alpha  " + i);
+        //console.log("we pruned in Alpha  " + i);
         break;
       }
     }
@@ -469,9 +394,22 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
       console.log("blacks turn");
       var gameNewMove = new Chess(gamesource.fen());
       gameNewMove.move(possibleMoves[i]);
-      const result = miniMax(gameNewMove, newDepth, Alpha, Beta, true);
-      //console.log(result);
-      var evaluation = result[1];
+
+      nextMoveHash = addLookUpHashTable(
+        possibleMoves[i],
+        getCurrentSq(gameNewMove, possibleMoves[i]),
+        "b",
+        gameHash,
+        false,
+        null
+      );
+      if (hashTable[nextMoveHash]) {
+        evaluation = hashTable[nextMoveHash]["eval"];
+      } else {
+        result = miniMax(gameNewMove, newDepth, Alpha, Beta, true);
+        evaluation = result[1];
+        hashTable[nextMoveHash] = { eval: evaluation };
+      }
 
       if (evaluation < minEval) {
         minEval = evaluation;
@@ -480,7 +418,7 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
 
       Beta = Math.min(Beta, evaluation);
       if (Beta <= Alpha) {
-        console.log("we pruned in Beta   " + i);
+        //console.log("we pruned in Beta   " + i);
         break;
       }
     }
@@ -507,16 +445,13 @@ function play() {
     const turn = "b";
     var possibleMoves = game.moves();
     var doopth = parseInt($("#search-depth").find(":selected").text());
-    hashInitial(game.board());
 
     // game over
     if (possibleMoves.length === 0) return console.log("GG");
 
-    console.log(hashValue);    
     nextMove = miniMax(game, doopth, -Infinity, +Infinity, false);
     game.move(nextMove[0]);
-    console.log("nextMove here:  " + nextMove, game.fen());
-    AddHashTable(nextMove, getCurrentSq (game, nextMove), "b")
+    console.log("nextMove here:  " + nextMove[0], nextMove[1] / 10, game.fen());
 
     board.position(game.fen());
   }
@@ -529,11 +464,18 @@ function play() {
       to: target,
       promotion: "q", // NOTE: always promote to a queen for example simplicity
     });
+    console.log(game.history());
 
     // illegal move
     if (move === null) return "snapback";
 
-    // make random legal move for black
+    // make Best calculated legal move for black
+
+    //Add to hashvalue
+
+    console.log(hashValue);
+    hashInitial(game.board());
+    console.log(hashValue);
     window.setTimeout(playComp, 250);
   }
 
