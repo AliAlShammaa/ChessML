@@ -405,14 +405,14 @@ function init_zobrist() {
 
   for (var i = 1; i < 64; i++) {
     for (var j = 1; j < 12; j++) {
-      table[i][j] = Math.floor(Math.random() * 768 * 768);
+      table[i][j] = Math.floor(Math.random() * (Math.pow(2, 32) - 1));
     }
   }
 }
 
 const tableOfvalues = init_zobrist();
 var hashValue = 0;
-var hashTable = new Array(Math.pow(2, 31) - 1).fill(null); //check
+var hashTable = new Array(Math.pow(2, 32) - 1).fill(null); //check
 
 function hashInitial(board) {
   for (var i = 1; i < 8; i++) {
@@ -515,7 +515,6 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
 function play() {
   var board = null;
   var game = new Chess();
-  hashInitial();
 
   //var doopth = document.getElementById("depth").value;
 
@@ -531,7 +530,7 @@ function play() {
     const turn = "b";
     var possibleMoves = game.moves();
     var doopth = parseInt($("#search-depth").find(":selected").text());
-
+    hashInitial();
     // game over
     if (possibleMoves.length === 0) return console.log("GG");
     console.log(game.board());
