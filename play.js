@@ -330,11 +330,10 @@ function addLookUpHashTable(nextMove, currentSq, turn, gameHash, add, props) {
     }
   }
 
-  if (add) {
-    hashTable[nextMoveHash] = props;
-  } else {
-    return nextMoveHash;
-  }
+  // if (add) {
+  //   hashTable[nextMoveHash] = props;
+  // } else {
+  return nextMoveHash;
 }
 
 function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
@@ -342,7 +341,7 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
 
   if (depth == 0) {
     const staticGame = gamesource;
-    chosenMove = ["", evaluateBoard(staticGame.board())]; // evaluator(staticGame.fen())];
+    chosenMove = ["", evaluateBoard(staticGame.board()), []]; // evaluator(staticGame.fen())];
     return chosenMove;
   }
 
@@ -355,11 +354,12 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
     //console.log(possibleMoves);
     var maxEval = -Infinity;
     var chosenMove = [];
+
     for (var i = 0; i < lengthOfPossible; i++) {
       //console.log("whites turn  " + i);
       var gameNewMove = new Chess(gamesource.fen());
       gameNewMove.move(possibleMoves[i]);
-
+      var listoo;
       nextMoveHash = addLookUpHashTable(
         possibleMoves[i],
         getCurrentSq(gameNewMove, possibleMoves[i]),
@@ -370,6 +370,8 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
       );
       if (hashTable[nextMoveHash]) {
         evaluation = hashTable[nextMoveHash]["eval"];
+        listoo = hashTable[nextMoveHash]["path"];
+        console.log(listoo);
       } else {
         result = miniMax(
           gameNewMove,
@@ -380,12 +382,14 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
           nextMoveHash
         );
         evaluation = result[1];
-        hashTable[nextMoveHash] = { eval: evaluation };
+        listoo = result[2];
+        listoo[listoo.length] = possibleMoves[i];
+        hashTable[nextMoveHash] = { eval: evaluation, path: listoo };
       }
 
       if (evaluation > maxEval) {
         maxEval = evaluation;
-        chosenMove = [possibleMoves[i], maxEval];
+        chosenMove = [possibleMoves[i], maxEval, listoo];
       }
 
       Alpha = Math.max(Alpha, evaluation);
@@ -403,6 +407,8 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
     for (var i = 0; i < lengthOfPossible; i++) {
       // console.log("blacks turn");
       var gameNewMove = new Chess(gamesource.fen());
+      var listoo;
+
       gameNewMove.move(possibleMoves[i]);
 
       nextMoveHash = addLookUpHashTable(
@@ -415,6 +421,8 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
       );
       if (hashTable[nextMoveHash]) {
         evaluation = hashTable[nextMoveHash]["eval"];
+        listoo = hashTable[nextMoveHash]["path"];
+        console.log(listoo);
       } else {
         result = miniMax(
           gameNewMove,
@@ -425,12 +433,14 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
           nextMoveHash
         );
         evaluation = result[1];
-        hashTable[nextMoveHash] = { eval: evaluation };
+        listoo = result[2];
+        listoo[listoo.length] = possibleMoves[i];
+        hashTable[nextMoveHash] = { eval: evaluation, path: listoo };
       }
 
       if (evaluation < minEval) {
         minEval = evaluation;
-        chosenMove = [possibleMoves[i], minEval];
+        chosenMove = [possibleMoves[i], minEval, listoo];
       }
 
       Beta = Math.min(Beta, evaluation);
@@ -476,7 +486,12 @@ function play() {
       false,
       null
     );
-    console.log("nextMove here:  " + nextMove[0], nextMove[1] / 10, game.fen());
+    console.log(
+      "nextMove here:  " + nextMove[0],
+      nextMove[1] / 10,
+      nextMoveHash[2],
+      game.fen()
+    );
     board.position(game.fen());
     //console.log(hashTable);
   }
