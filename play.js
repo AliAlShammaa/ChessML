@@ -25,117 +25,8 @@ const pcContract = {
   bk: 11,
   bp: 12,
 };
-//usesless
-function trimmer(fenArray) {
-  arrlen = fenArray.length;
-  var count = 0;
-  var trimmedArr = [];
 
-  for (i = 0; i < arrlen; i++) {
-    const char = fenArray[i];
-    if (char == "/") {
-      count++;
-    } else if (count == 7) {
-      if (char == "b" || char == "w") {
-        break;
-      } else {
-        trimmedArr.push(char);
-      }
-    } else {
-      trimmedArr.push(char);
-    }
-  }
-
-  return trimmedArr;
-}
-
-function adder(pos) {
-  var count = 0;
-  for (i = 0; i < pos.length; i++) {
-    const char = pos[i];
-    var toBeAdded = evalPoints[char];
-    if (toBeAdded) {
-      count = count + toBeAdded;
-    } else {
-      continue;
-    }
-  }
-
-  return count;
-}
-
-function evaluator(fen) {
-  const pos = trimmer(Array.from(fen));
-  const initial = adder(pos);
-
-  return initial;
-}
-
-function eval(gamesource, possibles, turn, bestMoveArr) {
-  var game1 = new Chess(gamesource.fen());
-
-  if (turn == "b") {
-    var bestMove;
-
-    if (possibles.length > 1) {
-      game1.move(possibles[1]);
-
-      const score1 = evaluator(game1.fen());
-      const removed = possibles.shift();
-      if (score1 < bestMoveArr[1]) {
-        const newAcc = [possibles[0], score1];
-
-        bestMove = eval(gamesource, possibles, turn, newAcc);
-      } else {
-        bestMove = eval(gamesource, possibles, turn, bestMoveArr);
-      }
-    } else {
-      //console.log(bestMoveArr[0] + "this is best move for " + turn);
-      return bestMoveArr;
-    }
-
-    return bestMove;
-  } else {
-    var bestMove;
-
-    if (possibles.length > 1) {
-      game1.move(possibles[1]);
-
-      const score1 = evaluator(game1.fen());
-      const removed = possibles.shift();
-      if (score1 > bestMoveArr[1]) {
-        const newAcc = [possibles[0], score1];
-
-        bestMove = eval(gamesource, possibles, turn, newAcc);
-      } else {
-        bestMove = eval(gamesource, possibles, turn, bestMoveArr);
-      }
-    } else {
-      //console.log(bestMoveArr[0] + "this is last move for " + turn);
-      return bestMoveArr;
-    }
-
-    return bestMove;
-  }
-}
-
-function channeler(gamesource, maximizingPlayer) {
-  var turn;
-
-  if (maximizingPlayer) {
-    turn = "w";
-  } else {
-    turn = "b";
-  }
-
-  var gameNow = new Chess(gamesource.fen());
-  const possibleMoves = gameNow.moves();
-
-  gameNow.move(possibleMoves[0]);
-  const score0 = evaluator(gameNow.fen());
-
-  return eval(gamesource, possibleMoves, turn, [possibleMoves[0], score0]);
-}
+function get {};
 
 //New Code with square eval
 
@@ -403,24 +294,28 @@ function init_zobrist() {
     return new Array(12).fill(null);
   });
 
-  for (var i = 1; i < 64; i++) {
-    for (var j = 1; j < 12; j++) {
-      table[i][j] = Math.floor(Math.random() * (Math.pow(2, 32) - 1));
+  for (var i = 0; i < 64; i++) {
+    for (var j = 0; j < 12; j++) {
+      table[i][j] = Math.floor(Math.random() * (Math.pow(2, 10) - 1));
     }
   }
+
+  return table;
 }
 
+strABC = "abcdefgh";
 const tableOfvalues = init_zobrist();
+console.log(tableOfvalues);
 var hashValue = 0;
-var hashTable = new Array(Math.pow(2, 32) - 1).fill(null); //check
+var hashTable = new Array(Math.pow(2, 10) - 1).fill(null);
 
 function hashInitial(board) {
-  for (var i = 1; i < 8; i++) {
-    for (var j = 1; j < 8; j++) {
+  for (var i = 0; i < 8; i++) {
+    for (var j = 0; j < 8; j++) {
       if (board[i][j] != null) {
         var obj = board[i][j];
-        var pcNumber = pcContract[obj[color].concat(obj[type])];
-        hashValue = hashValue ^ tableOfvalues[i * j][pcNumber];
+        var pcNumber = pcContract[obj["color"].concat(obj["type"])];
+        hashValue = hashValue ^ tableOfvalues[i * 8 + j][pcNumber - 1];
       }
     }
   }
@@ -428,9 +323,9 @@ function hashInitial(board) {
 
 function hashPC(pc, boardHash, sqLetter, sqRowNum) {
   const pcNumber = pcContract[pc];
-  sqColNum = parseInt(sqLetter);
-  sqNum = sqColNum * sqRowNum;
-  const pcZorbKey = tableOfvalues[sqNum][pcNumber];
+  sqColNum = strABC.lastIndexOf(sqLetter);
+  sqNum = 8 * (8 - parseInt(sqRowNum)) + sqColNum;
+  const pcZorbKey = tableOfvalues[sqNum][pcNumber - 1];
   var newBoardHash;
 
   newBoardHash = boardHash ^ pcZorbKey;
@@ -438,25 +333,108 @@ function hashPC(pc, boardHash, sqLetter, sqRowNum) {
   return newBoardHash;
 }
 
+
+function getCurrentSq (game, nextMove) {
+  if (nextMove[0] == "O-O" || nextMove[0] == "O-O-O" )  return null
+  hist = game.history({verbose:true})
+
+
+
+
+}
+
+
+ // No En Passant
+function AddHashTable(nextMove, currentSq,  turn) {
+  
+
+  var pc = nextMove[0].charAt(0);
+  var sqLetter;
+  var sqRowNum;
+  if (sqLetter != " " && sqLetter != "x" && sqLetter != "-") {
+    var sqLetter = nextMove[0].charAt(1);
+    var sqRowNum = nextMove[0].charAt(2);
+    pc = turn.concat(pc.toLowerCase());
+    var takeAwayHash = hashPC(pc, hashValue, "b", "8");
+    var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+    hashTable[nextMoveHash] = { 1: nextMove[1] };
+  } else if (sqLetter == "x") {
+    sqLetter = nextMove[0].charAt(2);
+    sqRowNum = nextMove[0].charAt(3);
+    pc = turn.concat(pc.toLowerCase());
+    var takeAwayHash = hashPC(pc, hashValue, "b", "8");
+    var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+    hashTable[nextMoveHash] = { 1: nextMove[1] };
+  } else if (nextMove[0] == "O-O") {
+     if  (turn == "w") {
+      var sqLetter = "g"
+      var sqRowNum = "1"
+      pc = "wk"
+      var takeAwayHash = hashPC(pc, hashValue, "e", "1");
+      var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+      var sqLetter = "f"
+      var sqRowNum = "1"
+      pc = "wr"
+      var takeAwayHashr = hashPC(pc, nextMoveHash, "h", "1");
+      var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+      hashTable[nextMoveHashr] = { 1: nextMove[1] };
+
+     } else {
+      var sqLetter = "g"
+      var sqRowNum = "8"
+      pc = "bk"
+      var takeAwayHash = hashPC(pc, hashValue, "e", "8");
+      var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+      var sqLetter = "f"
+      var sqRowNum = "8"
+      pc = "br"
+      var takeAwayHashr = hashPC(pc, nextMoveHash, "h", "8");
+      var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+      hashTable[nextMoveHashr] = { 1: nextMove[1] };
+     }
+  } else {
+    if  (turn == "w") {
+      var sqLetter = "b"
+      var sqRowNum = "1"
+      pc = "wk"
+      var takeAwayHash = hashPC(pc, hashValue, "e", "1");
+      var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+      var sqLetter = "c"
+      var sqRowNum = "1"
+      pc = "wr"
+      var takeAwayHashr = hashPC(pc, nextMoveHash, "a", "1");
+      var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+      hashTable[nextMoveHashr] = { 1: nextMove[1] };
+
+     } else {
+      var sqLetter = "b"
+      var sqRowNum = "8"
+      pc = "bk"
+      var takeAwayHash = hashPC(pc, hashValue, "e", "8");
+      var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+      var sqLetter = "fc"
+      var sqRowNum = "8"
+      pc = "br"
+      var takeAwayHashr = hashPC(pc, nextMoveHash, "a", "8");
+      var nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+      hashTable[nextMoveHashr] = { 1: nextMove[1] };
+     }
+  }
+
+  console.log(hashTable);
+}
+
 function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
-  //   console.log(depth);
-  // for (i = 0; i < 10; i++) {
-  //   console.log(i);
-  // }
+  
   const newDepth = depth - 1;
 
   if (depth == 0) {
     const staticGame = gamesource;
-    //chosenMove = channeler(staticGame, maximizingPlayer);
     chosenMove = ["", evaluateBoard(staticGame.board())]; // evaluator(staticGame.fen())];
-
     return chosenMove;
   }
-  // miniMax(gamesource, newDepth, true);
-
-  // const gameNow = new Chess(gamesource.fen());
-  const possibleMoves = reOrder(gamesource.moves()); // gamesource.moves(); //
-  //console.log(possibleMoves);
+  
+  const possibleMoves = reOrder(gamesource.moves());
   const lengthOfPossible = possibleMoves.length;
 
   if (maximizingPlayer) {
@@ -487,7 +465,6 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
     console.log(possibleMoves);
     var minEval = +Infinity;
     var chosenMove = [];
-    //console.log(possibleMoves.length + "this is lennn");
     for (var i = 0; i < lengthOfPossible; i++) {
       console.log("blacks turn");
       var gameNewMove = new Chess(gamesource.fen());
@@ -530,19 +507,16 @@ function play() {
     const turn = "b";
     var possibleMoves = game.moves();
     var doopth = parseInt($("#search-depth").find(":selected").text());
-    hashInitial();
+    hashInitial(game.board());
+
     // game over
     if (possibleMoves.length === 0) return console.log("GG");
-    console.log(game.board());
-    // var game0 = new Chess(game.fen());
-    // console.log(game0.fen());
-    // game0.move(possibleMoves[0]);
-    // console.log(game0.fen());
-    // const score0 = evaluator(game0.fen());
-    // game.move(eval(game, possibleMoves, turn, [possibleMoves[0], score0]));
+
+    console.log(hashValue);    
     nextMove = miniMax(game, doopth, -Infinity, +Infinity, false);
     game.move(nextMove[0]);
     console.log("nextMove here:  " + nextMove, game.fen());
+    AddHashTable(nextMove, getCurrentSq (game, nextMove), "b")
 
     board.position(game.fen());
   }
