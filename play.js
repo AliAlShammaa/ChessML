@@ -190,7 +190,7 @@ function init_zobrist() {
 
 strABC = "abcdefgh";
 const tableOfvalues = init_zobrist();
-//console.log(tableOfvalues);
+// console.log(tableOfvalues);
 var hashValue = 0;
 var hashTable = new Array(Math.pow(2, 25) - 1).fill(null);
 
@@ -210,7 +210,7 @@ function hashPC(pc, boardHash, sqLetter, sqRowNum) {
   var pcNumber = pcContract[pc];
   sqColNum = strABC.lastIndexOf(sqLetter);
   sqNum = 8 * (8 - parseInt(sqRowNum)) + sqColNum;
-  console.log(sqLetter, sqRowNum, sqNum, pcNumber - 1);
+  // console.log(sqLetter, sqRowNum, sqNum, pcNumber - 1);
   var pcZorbKey = tableOfvalues[sqNum][pcNumber - 1];
   var newBoardHash;
 
@@ -223,7 +223,7 @@ function getCurrentSq(game, nextMove) {
   if (nextMove == "O-O" || nextMove == "O-O-O") return null;
   hist = game.history({ verbose: true });
   fromSq = hist[hist.length - 1]["from"];
-  console.log(hist, fromSq);
+  //console.log(hist, fromSq);
   return fromSq;
 }
 
@@ -322,7 +322,7 @@ function addLookUpHashTable(nextMove, currentSq, turn, gameHash, add, props) {
       pc = "bk";
       var takeAwayHash = hashPC(pc, gameHash, "e", "8");
       var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      sqLetter = "fc";
+      sqLetter = "c";
       sqRowNum = "8";
       pc = "br";
       var takeAwayHashr = hashPC(pc, nextMoveHash, "a", "8");
@@ -352,11 +352,11 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
   var result;
 
   if (maximizingPlayer) {
-    console.log(possibleMoves);
+    //console.log(possibleMoves);
     var maxEval = -Infinity;
     var chosenMove = [];
     for (var i = 0; i < lengthOfPossible; i++) {
-      console.log("whites turn  " + i);
+      //console.log("whites turn  " + i);
       var gameNewMove = new Chess(gamesource.fen());
       gameNewMove.move(possibleMoves[i]);
 
@@ -397,11 +397,11 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
 
     return chosenMove;
   } else {
-    console.log(possibleMoves);
+    // console.log(possibleMoves);
     var minEval = +Infinity;
     var chosenMove = [];
     for (var i = 0; i < lengthOfPossible; i++) {
-      console.log("blacks turn");
+      // console.log("blacks turn");
       var gameNewMove = new Chess(gamesource.fen());
       gameNewMove.move(possibleMoves[i]);
 
@@ -489,6 +489,10 @@ function play() {
       to: target,
       promotion: "q", // NOTE: always promote to a queen for example simplicity
     });
+    // illegal move
+    if (move === null) return "snapback";
+
+    //updates hashvalue
     latestMove = game.history()[game.history().length - 1];
     hashValue = addLookUpHashTable(
       latestMove,
@@ -498,17 +502,9 @@ function play() {
       false,
       null
     );
-
-    // illegal move
-    if (move === null) return "snapback";
+    console.log(hashValue);
 
     // make Best calculated legal move for black
-
-    //Add to hashvalue
-
-    console.log(hashValue);
-    hashInitial(game.board());
-    console.log(hashValue);
     window.setTimeout(playComp, 250);
   }
 
