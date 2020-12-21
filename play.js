@@ -292,7 +292,7 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
 
   if (depth == 0) {
     const staticGame = gamesource;
-    chosenMove = ["", evaluateBoard(staticGame.board())]; // evaluator(staticGame.fen())];
+    chosenMove = ["", evaluateBoard(staticGame.board()), []]; // evaluator(staticGame.fen())];
     return chosenMove;
   }
 
@@ -303,16 +303,18 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
     console.log(possibleMoves);
     var maxEval = -Infinity;
     var chosenMove = [];
+
     for (var i = 0; i < lengthOfPossible; i++) {
       console.log("whites turn  " + i);
       var gameNewMove = new Chess(gamesource.fen());
       gameNewMove.move(possibleMoves[i]);
       var result = miniMax(gameNewMove, newDepth, Alpha, Beta, false);
       var evaluation = result[1];
-
+      var listoo = result[2];
+      listoo[listoo.length] = possibleMoves[i];
       if (evaluation > maxEval) {
         maxEval = evaluation;
-        chosenMove = [possibleMoves[i], maxEval];
+        chosenMove = [possibleMoves[i], maxEval, listoo];
       }
 
       Alpha = Math.max(Alpha, evaluation);
@@ -333,11 +335,13 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer) {
       gameNewMove.move(possibleMoves[i]);
       const result = miniMax(gameNewMove, newDepth, Alpha, Beta, true);
       //console.log(result);
+      var listoo = result[2];
+      listoo[listoo.length] = possibleMoves[i];
       var evaluation = result[1];
 
       if (evaluation < minEval) {
         minEval = evaluation;
-        chosenMove = [possibleMoves[i], minEval];
+        chosenMove = [possibleMoves[i], minEval, listoo];
       }
 
       Beta = Math.min(Beta, evaluation);
