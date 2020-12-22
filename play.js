@@ -335,6 +335,45 @@ function addLookUpHashTable(nextMove, currentSq, turn, gameHash) {
 	return nextMoveHash;
 }
 
+var killerMoveArr;
+
+function updateKillerMove(depth, Move) {
+	var kmAtDepth = killerMoveArr[depth];
+	var moveObj = kmAtDepth.filter((x) => {
+		return x.move == Move;
+	});
+	var allMoves = kmAtDepth.filter((x) => {
+		if (x.move != Move) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+	// console.log(depth, "MoveObj", moveObj);
+	// console.log("allMove", allMoves);
+	var newMoveObj;
+	var moveWeight;
+
+	if (moveObj[0]) {
+		moveWeight = moveObj[0].weight + 1;
+		newMoveObj = { move: Move, weight: moveWeight };
+	} else {
+		newMoveObj = { move: Move, weight: 1 };
+	}
+
+	/* killerMoveArr[depth] */ var newOrder = [newMoveObj].concat(allMoves).sort((a, b) => {
+		return b.weight - a.weight;
+	});
+	killerMoveArr[depth] = newOrder.slice(0, Math.min(3, newOrder.length));
+}
+
+function uniq(a) {
+	var seen = {};
+	return a.filter((item) => {
+		return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+	});
+}
+
 //Minimax begins here :
 
 function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash, initial, bestMove) {
@@ -348,11 +387,16 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash, ini
 	}
 
 	var possibleMoves;
+
 	// Iterative Deepening
 	if (depth > 1 && initial) {
 		possibleMoves = [bestMove[0]].concat(reOrder(gamesource.moves()));
 	} else {
-		possibleMoves = reOrder(gamesource.moves());
+		var listOfMoves = reOrder(gamesource.moves());
+		var kmAtDepth = killerMoveArr[depth].filter((x) => {
+			return listOfMoves.includes(x.move);
+		});
+		possibleMoves = uniq(kmAtDepth.map((x) => x["move"]).concat(listOfMoves));
 	}
 
 	const lengthOfPossible = possibleMoves.length;
@@ -408,6 +452,7 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash, ini
 			if (Beta <= Alpha) {
 				//console.log("we pruned in Alpha  " + i);
 				chosenMove[chosenMove.length - 1] = "Alpha";
+				updateKillerMove(depth, possibleMoves[i]);
 				break;
 			}
 		}
@@ -463,6 +508,7 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash, ini
 			Beta = Math.min(Beta, evaluation);
 			if (Beta <= Alpha) {
 				chosenMove[chosenMove.length - 1] = "Beta";
+				updateKillerMove(depth, possibleMoves[i]);
 				//console.log("we pruned in Beta   " + i);
 				break;
 			}
@@ -490,6 +536,9 @@ function play() {
 		const turn = "b";
 		var possibleMoves = game.moves();
 		var doopth = parseInt($("#search-depth").find(":selected").text());
+		killerMoveArr = new Array(5).fill(null).map((x) => {
+			return new Array(3);
+		});
 
 		// game over
 		if (possibleMoves.length === 0) return console.log("GG");
