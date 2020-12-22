@@ -167,7 +167,19 @@ function reOrder1(possArr) {
 	// .concat(rookMoves);
 }
 
-//Minimax begins here :
+//Iterative Deepinning
+function iterativeDeep(game, depth, maximizingPlayer, gameHash) {
+	var bestMove = [];
+	for (var i = 1; i <= depth; i++) {
+		NodesNotSearched = 0;
+		NodesSearched = 0;
+		bestMove = miniMax(game, i, -Infinity, +Infinity, maximizingPlayer, gameHash, true, bestMove);
+		console.log(i, bestMove);
+	}
+	return bestMove;
+}
+
+// Zobrist Hashing and TT:
 
 function init_zobrist() {
 	var table = new Array(64).fill(null).map((x) => {
@@ -185,7 +197,6 @@ function init_zobrist() {
 
 strABC = "abcdefgh";
 const tableOfvalues = init_zobrist();
-// console.log(tableOfvalues);
 const tableSize = Math.pow(2, 24) + Math.pow(2, 21);
 var hashValue = 0;
 var hashTable = new Array(tableSize).fill(null);
@@ -324,7 +335,9 @@ function addLookUpHashTable(nextMove, currentSq, turn, gameHash) {
 	return nextMoveHash;
 }
 
-function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
+//Minimax begins here :
+
+function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash, initial, bestMove) {
 	const newDepth = depth - 1;
 
 	if (depth == 0) {
@@ -334,7 +347,14 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
 		return chosenMove;
 	}
 
-	const possibleMoves = reOrder(gamesource.moves());
+	var possibleMoves;
+	// Iterative Deepening
+	if (depth > 1 && initial) {
+		possibleMoves = [bestMove[0]].concat(reOrder(gamesource.moves()));
+	} else {
+		possibleMoves = reOrder(gamesource.moves());
+	}
+
 	const lengthOfPossible = possibleMoves.length;
 	var evaluation;
 	var result;
@@ -366,7 +386,7 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
 				NodesNotSearched++;
 				continue;
 			} else {
-				result = miniMax(gameNewMove, newDepth, Alpha, Beta, false, nextMoveHash);
+				result = miniMax(gameNewMove, newDepth, Alpha, Beta, false, nextMoveHash, false, null);
 				NodesSearched++;
 				evaluation = result[1];
 				pathToLeaf = result[2];
@@ -398,7 +418,7 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
 		var minEval = +Infinity;
 		var chosenMove = [];
 		for (var i = 0; i < lengthOfPossible; i++) {
-			// console.log("blacks turn");
+			// console.log("blacks turn" + i);
 			var gameNewMove = new Chess(gamesource.fen());
 			var pathToLeaf;
 
@@ -422,7 +442,7 @@ function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
 				NodesNotSearched++;
 				continue;
 			} else {
-				result = miniMax(gameNewMove, newDepth, Alpha, Beta, true, nextMoveHash);
+				result = miniMax(gameNewMove, newDepth, Alpha, Beta, true, nextMoveHash, false, null);
 				NodesSearched;
 				evaluation = result[1];
 				pathToLeaf = result[2];
@@ -474,7 +494,7 @@ function play() {
 		// game over
 		if (possibleMoves.length === 0) return console.log("GG");
 
-		nextMove = miniMax(game, doopth, -Infinity, +Infinity, false, hashValue);
+		nextMove = iterativeDeep(game, doopth, false, hashValue);
 		game.move(nextMove[0]);
 		hashValue = addLookUpHashTable(nextMove[0], getCurrentSq(game, nextMove[0]), "b", hashValue);
 		console.log("nextMove here:  " + nextMove[0], nextMove[1] / 10, nextMove[2], game.fen());
