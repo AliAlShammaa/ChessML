@@ -1,4 +1,4 @@
-Copyright 2019 Chris Oakman
+Copyright 2020 Ali Al Shammaa
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
