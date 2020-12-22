@@ -1,0 +1,25 @@
+printWidth: 120
+singleQuote: false
+useTabs: true
+tabWidth: 4
+#requirePragma: true
+insertPragma: false
+semi: true
+trailingComma: "none"
+bracketSpacing: true
+# overrides:
+#   - files: '*.html'
+#     options:
+#       printWidth: 80
+#   - files: '*.component.html'
+#     options:
+#       printWidth: 80
+#   - files: '*.css'
+#     options:
+#       printWidth: 80
+#       useTabs: true
+#       tabWidth: 4
+#   - files: '*.stylelintrc.yml'
+#     options:
+#       useTabs: false
+#       tabWidth: 2

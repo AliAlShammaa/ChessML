@@ -12,532 +12,511 @@
 // };
 
 const pcContract = {
-  wr: 1,
-  wn: 2,
-  wb: 3,
-  wq: 4,
-  wk: 5,
-  wp: 6,
-  br: 7,
-  bn: 8,
-  bb: 9,
-  bq: 10,
-  bk: 11,
-  bp: 12,
+	wr: 1,
+	wn: 2,
+	wb: 3,
+	wq: 4,
+	wk: 5,
+	wp: 6,
+	br: 7,
+	bn: 8,
+	bb: 9,
+	bq: 10,
+	bk: 11,
+	bp: 12
 };
 
 //New Code with square eval
 
 function reOrder(possArr) {
-  const captures = possArr.filter((move) => {
-    if (move.indexOf("x") != -1) {
-      return move;
-    }
-  });
+	const captures = possArr.filter((move) => {
+		if (move.indexOf("x") != -1) {
+			return move;
+		}
+	});
 
-  const bishopKnightMoves = possArr.filter((move) => {
-    var bishOrKni = move.indexOf("B") == 0 || move.indexOf("N") == 0;
-    if (bishOrKni && move.indexOf("x") == -1) {
-      return move;
-    }
-  });
+	const bishopKnightMoves = possArr.filter((move) => {
+		var bishOrKni = move.indexOf("B") == 0 || move.indexOf("N") == 0;
+		if (bishOrKni && move.indexOf("x") == -1) {
+			return move;
+		}
+	});
 
-  const queenMoves = possArr.filter((move) => {
-    if (move.indexOf("Q") == 0 && move.indexOf("x") == -1) {
-      return move;
-    }
-  });
+	const queenMoves = possArr.filter((move) => {
+		if (move.indexOf("Q") == 0 && move.indexOf("x") == -1) {
+			return move;
+		}
+	});
 
-  const castlingMoves = possArr.filter((move) => {
-    if (move.indexOf("O") == 0) {
-      return move;
-    }
-  });
+	const castlingMoves = possArr.filter((move) => {
+		if (move.indexOf("O") == 0) {
+			return move;
+		}
+	});
 
-  const rookMoves = possArr.filter((move) => {
-    if (move.indexOf("R") == 0 && move.indexOf("x") == -1) {
-      return move;
-    }
-  });
+	const rookMoves = possArr.filter((move) => {
+		if (move.indexOf("R") == 0 && move.indexOf("x") == -1) {
+			return move;
+		}
+	});
 
-  const centerMoves = possArr.filter((move) => {
-    if (move.indexOf("e") == 0 || move.indexOf("d") == 0) {
-      return move;
-    }
-  });
+	const centerMoves = possArr.filter((move) => {
+		if (move.indexOf("e") == 0 || move.indexOf("d") == 0) {
+			return move;
+		}
+	});
 
-  const laterlMoves = possArr.filter((move) => {
-    if (move.indexOf("c") == 0 || move.indexOf("f") == 0) {
-      return move;
-    }
-  });
+	const laterlMoves = possArr.filter((move) => {
+		if (move.indexOf("c") == 0 || move.indexOf("f") == 0) {
+			return move;
+		}
+	});
 
-  const None = possArr.filter((move) => {
-    if (
-      move.indexOf("x") == -1 &&
-      move.indexOf("B") != 0 &&
-      move.indexOf("N") != 0 &&
-      move.indexOf("Q") != 0 &&
-      move.indexOf("R") != 0 &&
-      move.indexOf("O") == -1 &&
-      move.lastIndexOf("e") != 0 &&
-      move.lastIndexOf("d") != 0 &&
-      move.lastIndexOf("f") != 0 &&
-      move.lastIndexOf("c") != 0
-    ) {
-      return move;
-    }
-  });
+	const None = possArr.filter((move) => {
+		if (
+			move.indexOf("x") == -1 &&
+			move.indexOf("B") != 0 &&
+			move.indexOf("N") != 0 &&
+			move.indexOf("Q") != 0 &&
+			move.indexOf("R") != 0 &&
+			move.indexOf("O") == -1 &&
+			move.lastIndexOf("e") != 0 &&
+			move.lastIndexOf("d") != 0 &&
+			move.lastIndexOf("f") != 0 &&
+			move.lastIndexOf("c") != 0
+		) {
+			return move;
+		}
+	});
 
-  return captures
-    .concat(centerMoves)
-    .concat(bishopKnightMoves)
-    .concat(queenMoves)
-    .concat(castlingMoves)
-    .concat(laterlMoves)
-    .concat(None)
-    .concat(rookMoves);
+	return captures
+		.concat(centerMoves)
+		.concat(bishopKnightMoves)
+		.concat(queenMoves)
+		.concat(castlingMoves)
+		.concat(laterlMoves)
+		.concat(None)
+		.concat(rookMoves);
 }
 
 function reOrder1(possArr) {
-  const captures = possArr.filter((move) => {
-    if (move.indexOf("x") != -1) {
-      return move;
-    }
-  });
+	const captures = possArr.filter((move) => {
+		if (move.indexOf("x") != -1) {
+			return move;
+		}
+	});
 
-  const bishopKnightMoves = possArr.filter((move) => {
-    var bishOrKni = move.indexOf("B") == 0 || move.indexOf("N") == 0;
-    if (bishOrKni && move.indexOf("x") == -1) {
-      return move;
-    }
-  });
+	const bishopKnightMoves = possArr.filter((move) => {
+		var bishOrKni = move.indexOf("B") == 0 || move.indexOf("N") == 0;
+		if (bishOrKni && move.indexOf("x") == -1) {
+			return move;
+		}
+	});
 
-  const queenMoves = possArr.filter((move) => {
-    if (move.indexOf("Q") == 0 && move.indexOf("x") == -1) {
-      return move;
-    }
-  });
+	const queenMoves = possArr.filter((move) => {
+		if (move.indexOf("Q") == 0 && move.indexOf("x") == -1) {
+			return move;
+		}
+	});
 
-  // const castlingMoves = possArr.filter((move) => {
-  //   if (move.indexOf("O") == 0) {
-  //     return move;
-  //   }
-  // });
+	// const castlingMoves = possArr.filter((move) => {
+	//   if (move.indexOf("O") == 0) {
+	//     return move;
+	//   }
+	// });
 
-  // const rookMoves = possArr.filter((move) => {
-  //   if (move.indexOf("R") == 0 && move.indexOf("x") == -1) {
-  //     return move;
-  //   }
-  // });
+	// const rookMoves = possArr.filter((move) => {
+	//   if (move.indexOf("R") == 0 && move.indexOf("x") == -1) {
+	//     return move;
+	//   }
+	// });
 
-  // const centerMoves = possArr.filter((move) => {
-  //   if (move.indexOf("e") == 0 || move.indexOf("d") == 0) {
-  //     return move;
-  //   }
-  // });
+	// const centerMoves = possArr.filter((move) => {
+	//   if (move.indexOf("e") == 0 || move.indexOf("d") == 0) {
+	//     return move;
+	//   }
+	// });
 
-  // const laterlMoves = possArr.filter((move) => {
-  //   if (move.indexOf("c") == 0 || move.indexOf("f") == 0) {
-  //     return move;
-  //   }
-  // });
+	// const laterlMoves = possArr.filter((move) => {
+	//   if (move.indexOf("c") == 0 || move.indexOf("f") == 0) {
+	//     return move;
+	//   }
+	// });
 
-  const None = possArr.filter((move) => {
-    if (
-      move.indexOf("x") == -1 &&
-      move.indexOf("B") != 0 &&
-      move.indexOf("N") != 0 &&
-      move.indexOf("Q") != 0
-    ) {
-      // move.indexOf("R") != 0 &&
-      // move.indexOf("O") == -1 &&
-      // move.lastIndexOf("e") != 0 &&
-      // move.lastIndexOf("d") != 0 &&
-      // move.lastIndexOf("f") != 0 &&
-      // move.lastIndexOf("c") != 0
-      return move;
-    }
-  });
+	const None = possArr.filter((move) => {
+		if (move.indexOf("x") == -1 && move.indexOf("B") != 0 && move.indexOf("N") != 0 && move.indexOf("Q") != 0) {
+			// move.indexOf("R") != 0 &&
+			// move.indexOf("O") == -1 &&
+			// move.lastIndexOf("e") != 0 &&
+			// move.lastIndexOf("d") != 0 &&
+			// move.lastIndexOf("f") != 0 &&
+			// move.lastIndexOf("c") != 0
+			return move;
+		}
+	});
 
-  return (
-    captures
-      // .concat(centerMoves)
-      .concat(bishopKnightMoves)
-      .concat(queenMoves)
-      // .concat(castlingMoves)
-      //.concat(laterlMoves)
-      .concat(None)
-  );
-  // .concat(rookMoves);
+	return (
+		captures
+			// .concat(centerMoves)
+			.concat(bishopKnightMoves)
+			.concat(queenMoves)
+			// .concat(castlingMoves)
+			//.concat(laterlMoves)
+			.concat(None)
+	);
+	// .concat(rookMoves);
 }
 
 //Minimax begins here :
 
 function init_zobrist() {
-  var table = new Array(64).fill(null).map((x) => {
-    return new Array(12).fill(null);
-  });
+	var table = new Array(64).fill(null).map((x) => {
+		return new Array(12).fill(null);
+	});
 
-  for (var i = 0; i < 64; i++) {
-    for (var j = 0; j < 12; j++) {
-      table[i][j] = Math.floor(Math.random() * (Math.pow(2, 25) - 1));
-    }
-  }
+	for (var i = 0; i < 64; i++) {
+		for (var j = 0; j < 12; j++) {
+			table[i][j] = Math.floor(Math.random() * (Math.pow(2, 32) - 1));
+		}
+	}
 
-  return table;
+	return table;
 }
 
 strABC = "abcdefgh";
 const tableOfvalues = init_zobrist();
 // console.log(tableOfvalues);
+const tableSize = Math.pow(2, 24) + Math.pow(2, 21);
 var hashValue = 0;
-var hashTable = new Array(Math.pow(2, 25) - 1).fill(null);
+var hashTable = new Array(tableSize).fill(null);
 
 function hashInitial(board) {
-  for (var i = 0; i < 8; i++) {
-    for (var j = 0; j < 8; j++) {
-      if (board[i][j] != null) {
-        var obj = board[i][j];
-        var pcNumber = pcContract[obj["color"].concat(obj["type"])];
-        hashValue = hashValue ^ tableOfvalues[i * 8 + j][pcNumber - 1];
-      }
-    }
-  }
+	for (var i = 0; i < 8; i++) {
+		for (var j = 0; j < 8; j++) {
+			if (board[i][j] != null) {
+				var obj = board[i][j];
+				var pcNumber = pcContract[obj["color"].concat(obj["type"])];
+				hashValue = hashValue ^ tableOfvalues[i * 8 + j][pcNumber - 1];
+			}
+		}
+	}
 }
 
 function hashPC(pc, boardHash, sqLetter, sqRowNum) {
-  var pcNumber = pcContract[pc];
-  sqColNum = strABC.lastIndexOf(sqLetter);
-  sqNum = 8 * (8 - parseInt(sqRowNum)) + sqColNum;
-  // console.log(sqLetter, sqRowNum, sqNum, pcNumber - 1);
-  var pcZorbKey = tableOfvalues[sqNum][pcNumber - 1];
-  var newBoardHash;
+	var pcNumber = pcContract[pc];
+	sqColNum = strABC.lastIndexOf(sqLetter);
+	sqNum = 8 * (8 - parseInt(sqRowNum)) + sqColNum;
+	// console.log(sqLetter, sqRowNum, sqNum, pcNumber - 1);
+	var pcZorbKey = tableOfvalues[sqNum][pcNumber - 1];
+	var newBoardHash;
 
-  newBoardHash = boardHash ^ pcZorbKey;
+	newBoardHash = boardHash ^ pcZorbKey;
 
-  return newBoardHash;
+	return newBoardHash;
 }
 
 function getCurrentSq(game, nextMove) {
-  if (nextMove == "O-O" || nextMove == "O-O-O") return null;
-  hist = game.history({ verbose: true });
-  fromSq = hist[hist.length - 1]["from"];
-  //console.log(hist, fromSq);
-  return fromSq;
+	if (nextMove == "O-O" || nextMove == "O-O-O") return null;
+	hist = game.history({ verbose: true });
+	fromSq = hist[hist.length - 1]["from"];
+	//console.log(hist, fromSq);
+	return fromSq;
 }
 
+var NodesNotSearched = 0;
+var NodesSearched = 0;
 // No En Passant
-function addLookUpHashTable(nextMove, currentSq, turn, gameHash, add, props) {
-  var pc = nextMove.charAt(0);
-  var sqLetter = nextMove.charAt(1);
-  var sqRowNum = nextMove.charAt(2);
-  var nextMoveHash; //Nce2 Nfxd5
+function addLookUpHashTable(nextMove, currentSq, turn, gameHash) {
+	var pc = nextMove.charAt(0);
+	var sqLetter = nextMove.charAt(1);
+	var sqRowNum = nextMove.charAt(2);
+	var nextMoveHash; //Nce2 Nfxd5
 
-  if (sqLetter != "x" && sqLetter != "-") {
-    if (pc == pc.toLowerCase()) {
-      pc = turn.concat("p");
-      sqLetter = nextMove.charAt(0);
-      sqRowNum = nextMove.charAt(1);
-    } else {
-      pc = turn.concat(pc.toLowerCase());
-    }
+	if (sqLetter != "x" && sqLetter != "-") {
+		if (pc == pc.toLowerCase()) {
+			pc = turn.concat("p");
+			sqLetter = nextMove.charAt(0);
+			sqRowNum = nextMove.charAt(1);
+		} else {
+			pc = turn.concat(pc.toLowerCase());
+		}
 
-    if (isNaN(sqRowNum) && nextMove.length > 4) {
-      sqLetter = nextMove.charAt(3);
-      sqRowNum = nextMove.charAt(4);
-    } else if (isNaN(sqRowNum)) {
-      sqLetter = nextMove.charAt(2);
-      sqRowNum = nextMove.charAt(3);
-    }
+		if (isNaN(sqRowNum) && nextMove.length > 4) {
+			sqLetter = nextMove.charAt(3);
+			sqRowNum = nextMove.charAt(4);
+		} else if (isNaN(sqRowNum)) {
+			sqLetter = nextMove.charAt(2);
+			sqRowNum = nextMove.charAt(3);
+		}
 
-    var takeAwayHash = hashPC(
-      pc,
-      gameHash,
-      currentSq.charAt(0),
-      currentSq.charAt(1)
-    );
-    nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-  } else if (sqLetter == "x" || sqRowNum == "x") {
-    if (pc == pc.toLowerCase()) {
-      pc = turn.concat("p");
-    } else {
-      pc = turn.concat(pc.toLowerCase());
-    }
+		var takeAwayHash = hashPC(pc, gameHash, currentSq.charAt(0), currentSq.charAt(1));
+		nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+	} else if (sqLetter == "x" || sqRowNum == "x") {
+		if (pc == pc.toLowerCase()) {
+			pc = turn.concat("p");
+		} else {
+			pc = turn.concat(pc.toLowerCase());
+		}
 
-    if (sqLetter == "x") {
-      sqLetter = nextMove.charAt(2);
-      sqRowNum = nextMove.charAt(3);
-    } else {
-      sqLetter = nextMove.charAt(3);
-      sqRowNum = nextMove.charAt(4);
-    }
+		if (sqLetter == "x") {
+			sqLetter = nextMove.charAt(2);
+			sqRowNum = nextMove.charAt(3);
+		} else {
+			sqLetter = nextMove.charAt(3);
+			sqRowNum = nextMove.charAt(4);
+		}
 
-    var takeAwayHash = hashPC(
-      pc,
-      gameHash,
-      currentSq.charAt(0),
-      currentSq.charAt(1)
-    );
-    nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-  } else if (nextMove == "O-O") {
-    if (turn == "w") {
-      sqLetter = "g";
-      sqRowNum = "1";
-      pc = "wk";
-      var takeAwayHash = hashPC(pc, gameHash, "e", "1");
-      var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      sqLetter = "f";
-      sqRowNum = "1";
-      pc = "wr";
-      var takeAwayHashr = hashPC(pc, nextMoveHash, "h", "1");
-      nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
-    } else {
-      sqLetter = "g";
-      sqRowNum = "8";
-      pc = "bk";
-      var takeAwayHash = hashPC(pc, gameHash, "e", "8");
-      var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      sqLetter = "f";
-      sqRowNum = "8";
-      pc = "br";
-      var takeAwayHashr = hashPC(pc, nextMoveHash, "h", "8");
-      nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
-    }
-  } else {
-    if (turn == "w") {
-      sqLetter = "b";
-      sqRowNum = "1";
-      pc = "wk";
-      var takeAwayHash = hashPC(pc, gameHash, "e", "1");
-      var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      sqLetter = "c";
-      sqRowNum = "1";
-      pc = "wr";
-      var takeAwayHashr = hashPC(pc, nextMoveHash, "a", "1");
-      nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
-    } else {
-      sqLetter = "b";
-      sqRowNum = "8";
-      pc = "bk";
-      var takeAwayHash = hashPC(pc, gameHash, "e", "8");
-      var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
-      sqLetter = "c";
-      sqRowNum = "8";
-      pc = "br";
-      var takeAwayHashr = hashPC(pc, nextMoveHash, "a", "8");
-      nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
-    }
-  }
+		var takeAwayHash = hashPC(pc, gameHash, currentSq.charAt(0), currentSq.charAt(1));
+		nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+	} else if (nextMove == "O-O") {
+		if (turn == "w") {
+			sqLetter = "g";
+			sqRowNum = "1";
+			pc = "wk";
+			var takeAwayHash = hashPC(pc, gameHash, "e", "1");
+			var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+			sqLetter = "f";
+			sqRowNum = "1";
+			pc = "wr";
+			var takeAwayHashr = hashPC(pc, nextMoveHash, "h", "1");
+			nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+		} else {
+			sqLetter = "g";
+			sqRowNum = "8";
+			pc = "bk";
+			var takeAwayHash = hashPC(pc, gameHash, "e", "8");
+			var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+			sqLetter = "f";
+			sqRowNum = "8";
+			pc = "br";
+			var takeAwayHashr = hashPC(pc, nextMoveHash, "h", "8");
+			nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+		}
+	} else {
+		if (turn == "w") {
+			sqLetter = "b";
+			sqRowNum = "1";
+			pc = "wk";
+			var takeAwayHash = hashPC(pc, gameHash, "e", "1");
+			var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+			sqLetter = "c";
+			sqRowNum = "1";
+			pc = "wr";
+			var takeAwayHashr = hashPC(pc, nextMoveHash, "a", "1");
+			nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+		} else {
+			sqLetter = "b";
+			sqRowNum = "8";
+			pc = "bk";
+			var takeAwayHash = hashPC(pc, gameHash, "e", "8");
+			var nextMoveHash = hashPC(pc, takeAwayHash, sqLetter, sqRowNum);
+			sqLetter = "c";
+			sqRowNum = "8";
+			pc = "br";
+			var takeAwayHashr = hashPC(pc, nextMoveHash, "a", "8");
+			nextMoveHashr = hashPC(pc, takeAwayHashr, sqLetter, sqRowNum);
+		}
+	}
 
-  // if (add) {
-  //   hashTable[nextMoveHash] = props;
-  // } else {
-  return nextMoveHash;
+	// if (add) {
+	//   hashTable[nextMoveHash] = props;
+	// } else {
+	return nextMoveHash;
 }
 
 function miniMax(gamesource, depth, Alpha, Beta, maximizingPlayer, gameHash) {
-  const newDepth = depth - 1;
+	const newDepth = depth - 1;
 
-  if (depth == 0) {
-    const staticGame = gamesource;
-    chosenMove = ["", evaluateBoard(staticGame.board()), []]; // evaluator(staticGame.fen())];
-    return chosenMove;
-  }
+	if (depth == 0) {
+		const staticGame = gamesource;
+		chosenMove = ["", evaluateBoard(staticGame.board()), []];
+		NodesSearched++;
+		return chosenMove;
+	}
 
-  const possibleMoves = reOrder(gamesource.moves());
-  const lengthOfPossible = possibleMoves.length;
-  var evaluation;
-  var result;
+	const possibleMoves = reOrder(gamesource.moves());
+	const lengthOfPossible = possibleMoves.length;
+	var evaluation;
+	var result;
 
-  if (maximizingPlayer) {
-    //console.log(possibleMoves);
-    var maxEval = -Infinity;
-    var chosenMove = [];
+	if (maximizingPlayer) {
+		//console.log(possibleMoves);
+		var maxEval = -Infinity;
+		var chosenMove = [];
 
-    for (var i = 0; i < lengthOfPossible; i++) {
-      //console.log("whites turn  " + i);
-      var gameNewMove = new Chess(gamesource.fen());
-      gameNewMove.move(possibleMoves[i]);
-      var listoo;
-      nextMoveHash = addLookUpHashTable(
-        possibleMoves[i],
-        getCurrentSq(gameNewMove, possibleMoves[i]),
-        "w",
-        gameHash,
-        false,
-        null
-      );
-      if (hashTable[nextMoveHash]) {
-        evaluation = hashTable[nextMoveHash]["eval"];
-        listoo = hashTable[nextMoveHash]["path"];
-        console.log(listoo);
-      } else {
-        result = miniMax(
-          gameNewMove,
-          newDepth,
-          Alpha,
-          Beta,
-          false,
-          nextMoveHash
-        );
-        evaluation = result[1];
-        listoo = result[2];
-        listoo[listoo.length] = possibleMoves[i];
-        hashTable[nextMoveHash] = { eval: evaluation, path: listoo };
-      }
+		for (var i = 0; i < lengthOfPossible; i++) {
+			//console.log("whites turn  " + i);
+			var gameNewMove = new Chess(gamesource.fen());
+			gameNewMove.move(possibleMoves[i]);
+			var pathToLeaf;
+			nextMoveHash = addLookUpHashTable(
+				possibleMoves[i],
+				getCurrentSq(gameNewMove, possibleMoves[i]),
+				"w",
+				gameHash
+			);
 
-      if (evaluation > maxEval) {
-        maxEval = evaluation;
-        chosenMove = [possibleMoves[i], maxEval, listoo];
-      }
+			var hashObj = hashTable[nextMoveHash % tableSize];
 
-      Alpha = Math.max(Alpha, evaluation);
-      if (Beta <= Alpha) {
-        //console.log("we pruned in Alpha  " + i);
-        break;
-      }
-    }
+			if (hashObj && hashObj.searchDepth >= depth && hashObj.flag == "Exact") {
+				evaluation = hashObj["eval"];
+				pathToLeaf = hashObj["path"];
+				NodesNotSearched++;
+			} else if (hashObj && hashObj.searchDepth >= depth && hashObj.flag == "Beta" && hashObj.eval <= Alpha) {
+				NodesNotSearched++;
+				continue;
+			} else {
+				result = miniMax(gameNewMove, newDepth, Alpha, Beta, false, nextMoveHash);
+				NodesSearched++;
+				evaluation = result[1];
+				pathToLeaf = result[2];
+				pathToLeaf[pathToLeaf.length] = possibleMoves[i];
+				hashTable[nextMoveHash % tableSize] = {
+					eval: evaluation,
+					path: pathToLeaf,
+					searchDepth: depth,
+					flag: result[3]
+				};
+			}
 
-    return chosenMove;
-  } else {
-    // console.log(possibleMoves);
-    var minEval = +Infinity;
-    var chosenMove = [];
-    for (var i = 0; i < lengthOfPossible; i++) {
-      // console.log("blacks turn");
-      var gameNewMove = new Chess(gamesource.fen());
-      var listoo;
+			if (evaluation > maxEval) {
+				maxEval = evaluation;
+				chosenMove = [possibleMoves[i], maxEval, pathToLeaf, "Exact"];
+			}
 
-      gameNewMove.move(possibleMoves[i]);
+			Alpha = Math.max(Alpha, evaluation);
+			if (Beta <= Alpha) {
+				//console.log("we pruned in Alpha  " + i);
+				chosenMove[chosenMove.length - 1] = "Alpha";
+				break;
+			}
+		}
 
-      nextMoveHash = addLookUpHashTable(
-        possibleMoves[i],
-        getCurrentSq(gameNewMove, possibleMoves[i]),
-        "b",
-        gameHash,
-        false,
-        null
-      );
-      if (hashTable[nextMoveHash]) {
-        evaluation = hashTable[nextMoveHash]["eval"];
-        listoo = hashTable[nextMoveHash]["path"];
-        console.log(listoo);
-      } else {
-        result = miniMax(
-          gameNewMove,
-          newDepth,
-          Alpha,
-          Beta,
-          true,
-          nextMoveHash
-        );
-        evaluation = result[1];
-        listoo = result[2];
-        listoo[listoo.length] = possibleMoves[i];
-        hashTable[nextMoveHash] = { eval: evaluation, path: listoo };
-      }
+		return chosenMove;
+	} else {
+		// console.log(possibleMoves);
+		var minEval = +Infinity;
+		var chosenMove = [];
+		for (var i = 0; i < lengthOfPossible; i++) {
+			// console.log("blacks turn");
+			var gameNewMove = new Chess(gamesource.fen());
+			var pathToLeaf;
 
-      if (evaluation < minEval) {
-        minEval = evaluation;
-        chosenMove = [possibleMoves[i], minEval, listoo];
-      }
+			gameNewMove.move(possibleMoves[i]);
 
-      Beta = Math.min(Beta, evaluation);
-      if (Beta <= Alpha) {
-        //console.log("we pruned in Beta   " + i);
-        break;
-      }
-    }
+			nextMoveHash = addLookUpHashTable(
+				possibleMoves[i],
+				getCurrentSq(gameNewMove, possibleMoves[i]),
+				"b",
+				gameHash
+			);
 
-    return chosenMove;
-  }
+			var hashObj = hashTable[nextMoveHash % tableSize];
+
+			if (hashObj && hashObj.searchDepth >= depth && hashObj.flag == "Exact") {
+				evaluation = hashObj["eval"];
+				pathToLeaf = hashObj["path"];
+				NodesNotSearched++;
+				//console.log(pathToLeaf);
+			} else if (hashObj && hashObj.searchDepth >= depth && hashObj.flag == "Alpha" && hashObj.eval >= Beta) {
+				NodesNotSearched++;
+				continue;
+			} else {
+				result = miniMax(gameNewMove, newDepth, Alpha, Beta, true, nextMoveHash);
+				NodesSearched;
+				evaluation = result[1];
+				pathToLeaf = result[2];
+				pathToLeaf[pathToLeaf.length] = possibleMoves[i];
+				hashTable[nextMoveHash % tableSize] = {
+					eval: evaluation,
+					path: pathToLeaf,
+					searchDepth: depth,
+					flag: result[3]
+				};
+			}
+
+			if (evaluation < minEval) {
+				minEval = evaluation;
+				chosenMove = [possibleMoves[i], minEval, pathToLeaf, "Exact"];
+			}
+
+			Beta = Math.min(Beta, evaluation);
+			if (Beta <= Alpha) {
+				chosenMove[chosenMove.length - 1] = "Beta";
+				//console.log("we pruned in Beta   " + i);
+				break;
+			}
+		}
+
+		return chosenMove;
+	}
 }
 
 function play() {
-  var board = null;
-  var game = new Chess();
+	var board = null;
+	var game = new Chess();
 
-  //var doopth = document.getElementById("depth").value;
+	//var doopth = document.getElementById("depth").value;
 
-  function onDragStart(source, piece, position, orientation) {
-    // do not pick up pieces if the game is over
-    if (game.game_over()) return console.log("GG");
+	function onDragStart(source, piece, position, orientation) {
+		// do not pick up pieces if the game is over
+		if (game.game_over()) return console.log("GG");
 
-    // only pick up pieces for White
-    if (piece.search(/^b/) !== -1) return false;
-  }
+		// only pick up pieces for White
+		if (piece.search(/^b/) !== -1) return false;
+	}
 
-  function playComp() {
-    const turn = "b";
-    var possibleMoves = game.moves();
-    var doopth = parseInt($("#search-depth").find(":selected").text());
+	function playComp() {
+		const turn = "b";
+		var possibleMoves = game.moves();
+		var doopth = parseInt($("#search-depth").find(":selected").text());
 
-    // game over
-    if (possibleMoves.length === 0) return console.log("GG");
+		// game over
+		if (possibleMoves.length === 0) return console.log("GG");
 
-    nextMove = miniMax(game, doopth, -Infinity, +Infinity, false, hashValue);
-    game.move(nextMove[0]);
-    hashValue = addLookUpHashTable(
-      nextMove[0],
-      getCurrentSq(game, nextMove[0]),
-      "b",
-      hashValue,
-      false,
-      null
-    );
-    console.log(
-      "nextMove here:  " + nextMove[0],
-      nextMove[1] / 10,
-      nextMoveHash[2],
-      game.fen()
-    );
-    board.position(game.fen());
-    //console.log(hashTable);
-  }
+		nextMove = miniMax(game, doopth, -Infinity, +Infinity, false, hashValue);
+		game.move(nextMove[0]);
+		hashValue = addLookUpHashTable(nextMove[0], getCurrentSq(game, nextMove[0]), "b", hashValue);
+		console.log("nextMove here:  " + nextMove[0], nextMove[1] / 10, nextMove[2], game.fen());
+		board.position(game.fen());
+		console.log(NodesNotSearched, NodesSearched);
+	}
 
-  function onDrop(source, target) {
-    // see if the move is legal
+	function onDrop(source, target) {
+		// see if the move is legal
 
-    var move = game.move({
-      from: source,
-      to: target,
-      promotion: "q", // NOTE: always promote to a queen for example simplicity
-    });
-    // illegal move
-    if (move === null) return "snapback";
+		var move = game.move({
+			from: source,
+			to: target,
+			promotion: "q" // NOTE: always promote to a queen for example simplicity
+		});
+		// illegal move
+		if (move === null) return "snapback";
 
-    //updates hashvalue
-    latestMove = game.history()[game.history().length - 1];
-    hashValue = addLookUpHashTable(
-      latestMove,
-      getCurrentSq(game, latestMove),
-      "w",
-      hashValue,
-      false,
-      null
-    );
-    console.log(hashValue);
+		//updates hashvalue
+		latestMove = game.history()[game.history().length - 1];
+		hashValue = addLookUpHashTable(latestMove, getCurrentSq(game, latestMove), "w", hashValue);
+		console.log(hashValue);
 
-    // make Best calculated legal move for black
-    window.setTimeout(playComp, 250);
-  }
+		// make Best calculated legal move for black
+		window.setTimeout(playComp, 250);
+	}
 
-  // update the board position after the piece snap
-  // for castling, en passant, pawn promotion
-  function onSnapEnd() {
-    board.position(game.fen());
-  }
+	// update the board position after the piece snap
+	// for castling, en passant, pawn promotion
+	function onSnapEnd() {
+		board.position(game.fen());
+	}
 
-  var config = {
-    draggable: true,
-    position: "start",
-    onDragStart: onDragStart,
-    onDrop: onDrop,
-    onSnapEnd: onSnapEnd,
-  };
+	var config = {
+		draggable: true,
+		position: "start",
+		onDragStart: onDragStart,
+		onDrop: onDrop,
+		onSnapEnd: onSnapEnd
+	};
 
-  board = Chessboard("myBoard", config);
+	board = Chessboard("myBoard", config);
 }
 
 play();
