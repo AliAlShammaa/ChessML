@@ -1,6 +1,6 @@
 ## ChessML
 
-A Computer Chess program (in javascript) that runs on Type A algorithims as described by Claude Shannon. Specifically, it uses a Minimax algorithim with AlphaBeta pruning.
+A Computer Chess program (in javascript) that runs on Type A algorithms as described by Claude Shannon. Specifically, it uses a Minimax algorithim with AlphaBeta pruning.
 
 ## Imported Modules
 
